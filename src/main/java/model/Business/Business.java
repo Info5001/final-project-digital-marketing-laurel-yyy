@@ -52,7 +52,16 @@ public class Business {
         useraccountdirectory = new UserAccountDirectory();
         marketingpersondirectory = new MarketingPersonDirectory(this);
         employeedirectory = new EmployeeDirectory(this);
+        marketcatalog = new MarketCatalog(this);
+        channelcatalog = new ChannelCatalog(this);
+    }
 
+    public MarketCatalog getMarketCatalog() {
+        return marketcatalog;
+    }
+
+    public ChannelCatalog getChannelCatalog() {
+        return channelcatalog;
     }
 
     public int getSalesVolume() {

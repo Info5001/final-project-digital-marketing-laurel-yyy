@@ -6,6 +6,7 @@
 package model.ProductManagement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import model.OrderManagement.OrderItem;
 
@@ -19,6 +20,7 @@ public class Product {
     private int ceilingPrice;
     private int targetPrice;
     ArrayList<OrderItem> orderItems;
+    private HashMap<String, int[]> marketPrices;
 
     public Product(int fp, int cp, int tp) {
 
@@ -26,6 +28,7 @@ public class Product {
         ceilingPrice = cp;
         targetPrice = tp;
         orderItems = new ArrayList<OrderItem>();
+        marketPrices = new HashMap<>();
     }
 
     public Product(String n, int fp, int cp, int tp) {
@@ -34,6 +37,7 @@ public class Product {
         ceilingPrice = cp;
         targetPrice = tp;
         orderItems = new ArrayList<OrderItem>();
+        marketPrices = new HashMap<>();
     }
 
     public Product updateProduct(int fp, int cp, int tp) {
@@ -121,6 +125,26 @@ public class Product {
 
     public void setName(String n) {
         name = n;
+    }
+
+    public void setMarketPrice(String marketName, int floor, int ceiling, int target) {
+        marketPrices.put(marketName, new int[]{floor, ceiling, target});
+    }
+
+    public int[] getMarketPrice(String marketName) {
+        return marketPrices.getOrDefault(marketName, new int[]{floorPrice, ceilingPrice, targetPrice});
+    }
+
+    public int getMarketTargetPrice(String marketName) {
+        return getMarketPrice(marketName)[2];
+    }
+
+    public int getMarketFloorPrice(String marketName) {
+        return getMarketPrice(marketName)[0];
+    }
+
+    public int getMarketCeilingPrice(String marketName) {
+        return getMarketPrice(marketName)[1];
     }
 
     @Override

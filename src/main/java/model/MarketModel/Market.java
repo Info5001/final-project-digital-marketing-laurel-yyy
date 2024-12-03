@@ -18,10 +18,27 @@ public class Market {
   ArrayList<MarketChannelAssignment> channels;
   ArrayList<String> characteristics;
   ArrayList<Market> submarkets;
+  String name;
   int size;
 
   public Market(String s) {
+    name = s;
+    so = new ArrayList<SolutionOffer>();
     characteristics = new ArrayList<String>();
     characteristics.add(s);
+    channels = new ArrayList<MarketChannelAssignment>();
+    submarkets = new ArrayList<Market>();
+  }
+
+  public void addChannel(Channel c) {
+    channels.add(new MarketChannelAssignment(this, c));
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public ArrayList<MarketChannelAssignment> getChannels() {
+    return channels;
   }
 }

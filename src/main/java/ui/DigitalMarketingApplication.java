@@ -5,12 +5,17 @@
  */
 package ui;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 
 import com.github.javafaker.Faker;
 
 import model.Business.Business;
 import model.Business.ConfigureABusiness;
+import model.MarketModel.ChannelCatalog;
+import model.MarketModel.Market;
+import model.MarketModel.MarketCatalog;
+
 
 /**
  *

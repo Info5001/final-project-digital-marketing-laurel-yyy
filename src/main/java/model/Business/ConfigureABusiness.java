@@ -6,11 +6,16 @@
 package model.Business;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 import com.github.javafaker.Faker;
 
 import model.CustomerManagement.CustomerDirectory;
 import model.CustomerManagement.CustomerProfile;
+import model.MarketModel.MarketCatalog;
+import model.MarketModel.MarketChannelAssignment;
+import model.MarketModel.ChannelCatalog;
+import model.MarketModel.Market;
 import model.OrderManagement.MasterOrderList;
 import model.OrderManagement.Order;
 import model.Personnel.Person;
@@ -34,6 +39,8 @@ public class ConfigureABusiness {
   public static Business createABusinessAndLoadALotOfData(String name, int supplierCount, int productCount,
       int customerCount, int orderCount, int itemCount) {
     Business business = new Business(name);
+
+    initializeMarketAndChannels(business);
 
     // Add Suppliers +
     loadSuppliers(business, supplierCount);
@@ -61,7 +68,7 @@ public class ConfigureABusiness {
 
   static void loadProducts(Business b, int productCount) {
     SupplierDirectory supplierDirectory = b.getSupplierDirectory();
-
+    MarketCatalog marketCatalog = b.getMarketCatalog();
     for (Supplier supplier : supplierDirectory.getSupplierList()) {
 
       int randomProductNumber = getRandom(1, productCount);
@@ -74,7 +81,15 @@ public class ConfigureABusiness {
         int randomCeiling = getRandom(upperPriceLimit - range, upperPriceLimit);
         int randomTarget = getRandom(randomFloor, randomCeiling);
 
-        productCatalog.newProduct(productName, randomFloor, randomCeiling, randomTarget);
+        Product product = productCatalog.newProduct(productName, randomFloor, randomCeiling, randomTarget);
+
+        for (Market market : marketCatalog.getMarkets()) {
+          int marketFloor = (int)(randomFloor * (0.9 + getRandom(0, 20) / 100.0));
+          int marketCeiling = (int)(randomCeiling * (0.9 + getRandom(0, 20) / 100.0));
+          int marketTarget = (int)(randomTarget * (0.9 + getRandom(0, 20) / 100.0));
+          
+          product.setMarketPrice(market.getName(), marketFloor, marketCeiling, marketTarget);
+        }
       }
     }
   }
@@ -110,6 +125,9 @@ public class ConfigureABusiness {
     CustomerDirectory cd = b.getCustomerDirectory();
     SupplierDirectory sd = b.getSupplierDirectory();
 
+    MarketCatalog mc = b.getMarketCatalog();
+    ArrayList<Market> markets = mc.getMarkets();
+
     for (int index = 0; index < orderCount; index++) {
 
       CustomerProfile randomCustomer = cd.pickRandomCustomer();
@@ -118,8 +136,14 @@ public class ConfigureABusiness {
         return;
       }
 
+      Market randomMarket = markets.get(getRandom(0, markets.size()));
+      ArrayList<MarketChannelAssignment> channelAssignments = randomMarket.getChannels();
+      MarketChannelAssignment randomMCA = channelAssignments.get(getRandom(0, channelAssignments.size()));
+
+
       // create an order for that customer
       Order randomOrder = mol.newOrder(randomCustomer);
+      randomOrder.setMarketChannelAssignment(randomMCA);
 
       // add order items
       // -- pick a supplier first (randomly)
@@ -140,8 +164,9 @@ public class ConfigureABusiness {
           System.out.println("Cannot generate orders. No products in the product catalog.");
           return;
         }
-
-        int randomPrice = getRandom(randomProduct.getFloorPrice(), randomProduct.getCeilingPrice());
+        
+        int[] marketPrice = randomProduct.getMarketPrice(randomMarket.getName());
+        int randomPrice = getRandom(marketPrice[0], marketPrice[1]);
         int randomQuantity = getRandom(1, productMaxQuantity);
 
         randomOrder.newOrderItem(randomProduct, randomPrice, randomQuantity);
@@ -150,5 +175,34 @@ public class ConfigureABusiness {
     // Make sure order items are connected to the order
 
   }
+  public static void initializeMarketAndChannels(Business business) {
+    MarketCatalog marketCatalog = business.getMarketCatalog();
+    Market america = marketCatalog.newMarket("America");
+    Market europe = marketCatalog.newMarket("Europe");
+    Market asia = marketCatalog.newMarket("Asia");
+
+    ChannelCatalog channelCatalog = business.getChannelCatalog();
+    model.MarketModel.Channel ecommerce = channelCatalog.newChannel("E-Commerce");
+    model.MarketModel.Channel retail = channelCatalog.newChannel("Retail");
+    model.MarketModel.Channel wholesale = channelCatalog.newChannel("Wholesale");
+    model.MarketModel.Channel directsale = channelCatalog.newChannel("Directsale");
+
+    for(Market market : marketCatalog.getMarkets()) {
+        for(model.MarketModel.Channel channel : channelCatalog.getChannels()) {
+            market.addChannel(channel);
+        }
+    }
+
+    System.out.println("\n=== Markets and Channels Configuration ===");
+    System.out.println("Markets:");
+    for(Market m : marketCatalog.getMarkets()) {
+        System.out.println("- " + m.getName());
+    }
+    
+    System.out.println("\nChannels:");
+    for(model.MarketModel.Channel c : channelCatalog.getChannels()) {
+        System.out.println("- " + c.getName());
+    }
+}
 
 }

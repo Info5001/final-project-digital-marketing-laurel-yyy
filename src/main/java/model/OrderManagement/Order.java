@@ -105,4 +105,12 @@ public class Order {
     public String getCustomerId() {
         return customer.getCustomerId();
     }
+
+    public void setMarketChannelAssignment(MarketChannelAssignment mca) {
+        this.mca = mca;
+    }
+ 
+    public MarketChannelAssignment getMarketChannelAssignment() {
+        return mca;
+    }
 }
