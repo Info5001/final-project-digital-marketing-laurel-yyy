@@ -7,14 +7,17 @@ package ui;
 
 import java.nio.channels.Channel;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.InputMismatchException;
 
 import com.github.javafaker.Faker;
 
 import model.Business.Business;
 import model.Business.ConfigureABusiness;
-import model.MarketModel.ChannelCatalog;
-import model.MarketModel.Market;
-import model.MarketModel.MarketCatalog;
+import model.MarketModel.*;
+import model.ShoppingSystem.ShoppingSystem;
+import model.UserAccountManagement.UserAccount;
+import model.UserAccountManagement.UserAccountDirectory;;
 
 
 /**
@@ -86,6 +89,42 @@ public class DigitalMarketingApplication {
     Business business = ConfigureABusiness.createABusinessAndLoadALotOfData("Amazon", 50, 10, 30,
         100,
         10);
-
+    
+    Scanner scanner = new Scanner(System.in);
+        System.out.println("1. Admin Login");
+        System.out.println("2. Customer Shopping");
+        System.out.print("Choose option: ");
+        
+        int choice = scanner.nextInt();
+        if (choice == 1) {
+          UserAccountDirectory uad = business.getUserAccountDirectory();
+          UserAccount userAccount = null;
+          while(userAccount == null) {
+              System.out.println("\n=== Login ===");
+              System.out.print("Username: ");
+              String username = scanner.nextLine();
+              System.out.print("Password: ");
+              String password = scanner.nextLine();
+              
+              userAccount = uad.AuthenticateUser(username, password);
+              
+              if(userAccount == null) {
+                  System.out.println("Invalid username or password.");
+                  continue;
+              }
+              
+              if(!userAccount.getRole().equals("Admin")) {
+                  System.out.println("Admin required.");
+                  userAccount = null;
+                  continue;
+              }
+            }
+          MarketingReports.showReportMenu(business);
+                  
+        } else if (choice == 2) {
+            ShoppingSystem shoppingSystem = new ShoppingSystem(business);
+            shoppingSystem.start();
+        }
+          }
   }
-}
+

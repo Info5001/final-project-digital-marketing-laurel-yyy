@@ -13,6 +13,7 @@ public class MarketChannelAssignment {
 
   Market market;
   Channel channel;
+  Integer advertisingExpense;
 
   public MarketChannelAssignment(Market m, Channel c) {
 
@@ -21,12 +22,20 @@ public class MarketChannelAssignment {
 
   }
 
+  public void setAdvertisingExpense(Integer ep) {
+      advertisingExpense = ep;
+  }
+
   public Market getMarket() {
     return market;
   }
 
   public Channel getChannel() {
     return channel;
+  }
+
+  public Integer getAdExpense() {
+    return advertisingExpense;
   }
 
 }

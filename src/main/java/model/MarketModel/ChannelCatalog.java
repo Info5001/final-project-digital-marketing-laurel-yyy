@@ -19,7 +19,7 @@ public class ChannelCatalog {
 
     public ChannelCatalog(Business b) {
         business = b;
-        channels = new ArrayList();
+        channels = new ArrayList<Channel>();
     }
 
     public Channel newChannel(String name) {

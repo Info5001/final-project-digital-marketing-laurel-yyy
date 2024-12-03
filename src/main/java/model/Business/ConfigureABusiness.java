@@ -18,12 +18,12 @@ import model.MarketModel.ChannelCatalog;
 import model.MarketModel.Market;
 import model.OrderManagement.MasterOrderList;
 import model.OrderManagement.Order;
-import model.Personnel.Person;
-import model.Personnel.PersonDirectory;
 import model.ProductManagement.Product;
 import model.ProductManagement.ProductCatalog;
 import model.Supplier.Supplier;
 import model.Supplier.SupplierDirectory;
+import model.Personnel.*;
+import model.UserAccountManagement.*;
 
 /**
  *
@@ -41,7 +41,9 @@ public class ConfigureABusiness {
     Business business = new Business(name);
 
     initializeMarketAndChannels(business);
-
+    setAdvertisingExpenses(business);
+    initializeAdmin(business);
+    
     // Add Suppliers +
     loadSuppliers(business, supplierCount);
 
@@ -56,6 +58,16 @@ public class ConfigureABusiness {
 
     return business;
   }
+  public static void initializeAdmin(Business business) {
+
+        PersonDirectory personDirectory = business.getPersonDirectory();
+        EmployeeDirectory employeeDirectory = business.getEmployeeDirectory();
+        UserAccountDirectory userAccountDirectory = business.getUserAccountDirectory();
+
+        Person adminPerson = personDirectory.newPerson("AdminUser");
+        EmployeeProfile adminProfile = employeeDirectory.newEmployeeProfile(adminPerson);
+        userAccountDirectory.newUserAccount(adminProfile, "admin", "admin");
+    }
 
   public static void loadSuppliers(Business b, int supplierCount) {
     Faker faker = new Faker();
@@ -91,7 +103,18 @@ public class ConfigureABusiness {
           product.setMarketPrice(market.getName(), marketFloor, marketCeiling, marketTarget);
         }
       }
+      }
     }
+  
+    static void setAdvertisingExpenses(Business b) {
+      MarketCatalog marketCatalog = b.getMarketCatalog();
+      
+      for (Market market : marketCatalog.getMarkets()) {
+          for (MarketChannelAssignment mca : market.getChannels()) {
+              Integer amount = getRandom(500, 2000); 
+              mca.setAdvertisingExpense(amount);
+          }
+      }
   }
 
   static int getRandom(int lower, int upper) {
@@ -107,6 +130,8 @@ public class ConfigureABusiness {
   static void loadCustomers(Business b, int customerCount) {
     CustomerDirectory customerDirectory = b.getCustomerDirectory();
     PersonDirectory personDirectory = b.getPersonDirectory();
+    Person testPerson = personDirectory.newPerson("test1");
+    customerDirectory.newCustomerProfile(testPerson);
 
     Faker faker = new Faker();
 
@@ -191,17 +216,6 @@ public class ConfigureABusiness {
         for(model.MarketModel.Channel channel : channelCatalog.getChannels()) {
             market.addChannel(channel);
         }
-    }
-
-    System.out.println("\n=== Markets and Channels Configuration ===");
-    System.out.println("Markets:");
-    for(Market m : marketCatalog.getMarkets()) {
-        System.out.println("- " + m.getName());
-    }
-    
-    System.out.println("\nChannels:");
-    for(model.MarketModel.Channel c : channelCatalog.getChannels()) {
-        System.out.println("- " + c.getName());
     }
 }
 

@@ -58,4 +58,8 @@ public class MasterOrderList {
         System.out.println("There are " + orders.size() + " order.");
     }
 
+    public ArrayList<Order> getOrders() {
+        return orders;
+    }
+
 }
