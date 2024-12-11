@@ -29,8 +29,8 @@ public class ChannelProfitabilitySummary {
         }
     }
     
-    public double getEfficiencyRatio() {
-        return adBudget != 0 ? (double)totalRevenue / adBudget : 0;
+    public double getROI() {
+        return adBudget != 0 ? (double)(totalRevenue-adBudget) / adBudget : 0;
     }
 
     public String getChannelName() {

@@ -9,7 +9,7 @@ public class MarketingReports {
     public static void printMarketProfitabilityReport(Business business) {
         System.out.println("\n=== Market Profitability Report ===");
         System.out.printf("%-15s %-15s %-15s %-15s\n", 
-            "Market", "Revenue", "Ad Cost", "Profit");
+            "Market", "Revenue", "Ad Budget", "Profit");
         System.out.println("------------------------------------------------");
         
         int totalRevenue = 0;
@@ -40,7 +40,7 @@ public class MarketingReports {
     public static void printChannelProfitabilityReport(Business business) {
         System.out.println("\n=== Channel Profitability Report ===");
         System.out.printf("%-15s %-12s %-12s %-12s %-12s\n", 
-            "Channel", "Revenue", "Ad Budget", "Orders", "Efficiency");
+            "Channel", "Revenue", "Ad Budget", "Orders", "ROI");
         System.out.println("-----------------------------------------------------------");
         
         MasterOrderList mol = business.getMasterOrderList();
@@ -51,7 +51,7 @@ public class MarketingReports {
                 summary.getTotalRevenue(),
                 summary.getAdBudget(),
                 summary.getOrderCount(),
-                summary.getEfficiencyRatio()
+                summary.getROI()
             );
         }
         System.out.println("-----------------------------------------------------------");
