@@ -125,7 +125,7 @@ public class ShoppingSystem {
             int randomIndex = random.nextInt(products.size());
             Product p = products.get(randomIndex);
             System.out.println((i+1) + ". " + p.getName() + 
-                            " - Special Price: $" + p.getMarketTargetPrice(selectedMarket.getName()));
+                            " - Special Price: $" + p.getMarketTargetPrice(selectedMarket.getMca(selectedChannel)));
         }
     }
 
@@ -142,10 +142,10 @@ public class ShoppingSystem {
         int index = 1;
         for (Supplier supplier : suppliers) {
             for (Product product : supplier.getProductCatalog().getProductList()) {
-                int[] marketPrices = product.getMarketPrice(selectedMarket.getName());
+                int[] marketPrices = product.getMarketPrice(selectedMarket.getMca(selectedChannel));
                 if (marketPrices != null) { 
                     System.out.println(index + ". " + product.getName() + 
-                                     " - Price: $" + product.getMarketTargetPrice(selectedMarket.getName()));
+                                     " - Price: $" + product.getMarketTargetPrice(selectedMarket.getMca(selectedChannel)));
                     availableProducts.add(product);
                     index++;
                 }
@@ -167,7 +167,7 @@ public class ShoppingSystem {
                 Product selectedProduct = availableProducts.get(choice - 1);
                 Order tempOrder = new Order(customerProfile);
                 OrderItem item = new OrderItem(selectedProduct, 
-                                            selectedProduct.getMarketTargetPrice(selectedMarket.getName()),
+                                            selectedProduct.getMarketTargetPrice(selectedMarket.getMca(selectedChannel)),
                                             quantity,
                                             tempOrder);
                 shoppingCart.add(item);

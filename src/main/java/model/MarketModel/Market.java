@@ -34,6 +34,15 @@ public class Market {
     channels.add(new MarketChannelAssignment(this, c));
   }
 
+  public MarketChannelAssignment getMca(Channel c) {
+    for(MarketChannelAssignment mca : channels) {
+        if( mca.getChannel() == c ){
+          return mca;
+        }
+    }
+    return null;
+  }
+
   public String getName() {
     return name;
   }

@@ -8,6 +8,7 @@ package model.ProductManagement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.MarketModel.MarketChannelAssignment;
 import model.OrderManagement.OrderItem;
 
 /**
@@ -20,7 +21,7 @@ public class Product {
     private int ceilingPrice;
     private int targetPrice;
     ArrayList<OrderItem> orderItems;
-    private HashMap<String, int[]> marketPrices;
+    private HashMap<MarketChannelAssignment, int[]> marketChannelPrices;
 
     public Product(int fp, int cp, int tp) {
 
@@ -28,7 +29,7 @@ public class Product {
         ceilingPrice = cp;
         targetPrice = tp;
         orderItems = new ArrayList<OrderItem>();
-        marketPrices = new HashMap<>();
+        marketChannelPrices = new HashMap<>();
     }
 
     public Product(String n, int fp, int cp, int tp) {
@@ -37,7 +38,7 @@ public class Product {
         ceilingPrice = cp;
         targetPrice = tp;
         orderItems = new ArrayList<OrderItem>();
-        marketPrices = new HashMap<>();
+        marketChannelPrices = new HashMap<>();
     }
 
     public Product updateProduct(int fp, int cp, int tp) {
@@ -127,24 +128,24 @@ public class Product {
         name = n;
     }
 
-    public void setMarketPrice(String marketName, int floor, int ceiling, int target) {
-        marketPrices.put(marketName, new int[]{floor, ceiling, target});
+    public void setMarketPrice(MarketChannelAssignment mca, int floor, int ceiling, int target) {
+        marketChannelPrices.put(mca, new int[]{floor, ceiling, target});
     }
 
-    public int[] getMarketPrice(String marketName) {
-        return marketPrices.getOrDefault(marketName, new int[]{floorPrice, ceilingPrice, targetPrice});
+    public int[] getMarketPrice(MarketChannelAssignment mca) {
+        return marketChannelPrices.getOrDefault(mca, new int[]{floorPrice, ceilingPrice, targetPrice});
     }
 
-    public int getMarketTargetPrice(String marketName) {
-        return getMarketPrice(marketName)[2];
+    public int getMarketTargetPrice(MarketChannelAssignment mca) {
+        return getMarketPrice(mca)[2];
     }
 
-    public int getMarketFloorPrice(String marketName) {
-        return getMarketPrice(marketName)[0];
+    public int getMarketFloorPrice(MarketChannelAssignment mca) {
+        return getMarketPrice(mca)[0];
     }
 
-    public int getMarketCeilingPrice(String marketName) {
-        return getMarketPrice(marketName)[1];
+    public int getMarketCeilingPrice(MarketChannelAssignment mca) {
+        return getMarketPrice(mca)[1];
     }
 
     @Override

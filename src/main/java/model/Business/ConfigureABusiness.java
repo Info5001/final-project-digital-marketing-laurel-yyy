@@ -96,11 +96,13 @@ public class ConfigureABusiness {
         Product product = productCatalog.newProduct(productName, randomFloor, randomCeiling, randomTarget);
 
         for (Market market : marketCatalog.getMarkets()) {
-          int marketFloor = (int)(randomFloor * (0.9 + getRandom(0, 20) / 100.0));
-          int marketCeiling = (int)(randomCeiling * (0.9 + getRandom(0, 20) / 100.0));
-          int marketTarget = (int)(randomTarget * (0.9 + getRandom(0, 20) / 100.0));
+          for(MarketChannelAssignment mca : market.getChannels()) {
+          int mcaFloor = (int)(randomFloor * (0.9 + getRandom(0, 20) / 100.0));
+          int mcaCeiling = (int)(randomCeiling * (0.9 + getRandom(0, 20) / 100.0));
+          int mcaTarget = (int)(randomTarget * (0.9 + getRandom(0, 20) / 100.0));
           
-          product.setMarketPrice(market.getName(), marketFloor, marketCeiling, marketTarget);
+          product.setMarketPrice(mca, mcaFloor, mcaCeiling, mcaTarget);
+        }
         }
       }
       }
@@ -190,7 +192,7 @@ public class ConfigureABusiness {
           return;
         }
         
-        int[] marketPrice = randomProduct.getMarketPrice(randomMarket.getName());
+        int[] marketPrice = randomProduct.getMarketPrice(randomMCA);
         int randomPrice = getRandom(marketPrice[0], marketPrice[1]);
         int randomQuantity = getRandom(1, productMaxQuantity);
 
